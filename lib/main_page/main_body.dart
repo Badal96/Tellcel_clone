@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import './main_page_slider.dart';
+import './main_slider.dart';
+import '../http_requests/httprequest.dart';
 class MainPageBody extends StatefulWidget {
-  final String balance;
+  final String balance; 
 
   const MainPageBody(this.balance, {super.key});
 
@@ -12,6 +13,12 @@ class MainPageBody extends StatefulWidget {
 class _MainPageBodyState extends State<MainPageBody> {
   final Color textcolor = const Color.fromARGB(158, 0, 0, 0);
   bool ishidden = true;
+ 
+
+  String text = 'asd';
+
+  
+
 
   @override
   Widget build(context) {
@@ -56,13 +63,19 @@ class _MainPageBodyState extends State<MainPageBody> {
                         Visibility(
                           visible: ishidden ? true : false,
                           replacement: const Text('*****',style:TextStyle(color: Color.fromARGB(78, 0, 0, 0),fontSize: 20 ),),
-                          child: Text(widget.balance,style: TextStyle(fontSize: 20),),
+                          child: Text(widget.balance,style:const TextStyle(fontSize: 20),),
                         ),
                         Row(
                           children: [
+                           
                             Expanded(
                               child: ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  HttpRequests().getpictures().then((value) =>
+                                  super.setState(() {
+                                    text = value.toString();
+                                  }) );
+                                },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.orange,
                                   shape: RoundedRectangleBorder(
@@ -88,16 +101,24 @@ class _MainPageBodyState extends State<MainPageBody> {
                 decoration: const BoxDecoration(
                     color: Color.fromARGB(232, 98, 201, 201),
                     borderRadius: BorderRadius.all(Radius.circular(10))),
-                child: const Column(
-                  children: [ ]
+                child:  Column(
+                  children: [  FutureBuilder(
+                    future:HttpRequests().getpictures(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Align(child:  CircularProgressIndicator(), heightFactor: 4 , );}
+                      else {
+                        return Text(snapshot.data.toString(),style:const TextStyle(color: Colors.black),);
+                      }
+                      
+                    },
+                  )]
                 ),
             
               ),
-              
-
             ],
           ),
-          MainPageSlider()
+         const MainPageSlider()
          
 
         ],

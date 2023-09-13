@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './main_page_body.dart';
+import './main_body.dart';
 
 
 class MainPage extends StatefulWidget {
@@ -53,7 +53,7 @@ class _MainPageState extends State<MainPage> {
       ),
 
       body: MainPageBody(balance),
-    
+   
     );
   }
 }
