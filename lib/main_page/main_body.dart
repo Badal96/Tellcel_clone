@@ -13,12 +13,12 @@ class MainPageBody extends StatefulWidget {
 class _MainPageBodyState extends State<MainPageBody> {
   final Color textcolor = const Color.fromARGB(158, 0, 0, 0);
   bool ishidden = true;
-  late Future <String> text;
+  late Future <List<dynamic>> text;
 @override
   void initState() {
    
     super.initState();
-    text = HttpRequests().getpictures();
+    text = HttpRequests().getCatinfo();
   }
   
 
@@ -76,7 +76,7 @@ class _MainPageBodyState extends State<MainPageBody> {
                                 onPressed: () {
                                 
                                   super.setState(() {
-                                    text = HttpRequests().getpictures();
+                                    text = HttpRequests().getCatinfo();
                                   } );
                                 },
                                 style: ElevatedButton.styleFrom(
@@ -109,9 +109,9 @@ class _MainPageBodyState extends State<MainPageBody> {
                     future:text,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Align(child:  CircularProgressIndicator(), heightFactor: 4 , );}
+                      return const Align(heightFactor: 4 ,  child:  CircularProgressIndicator() );}
                       else {
-                        return Text(snapshot.data.toString(),style:const TextStyle(color: Colors.black),);
+                        return Text(snapshot.data! [0]['name'] ,style:const TextStyle(color: Colors.black),);
                       }
                       
                     },
