@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:telcell_wallet/helpers/colors.dart';
 import './main_slider.dart';
 import '../http_requests/httprequest.dart';
+import 'package:dotted_border/dotted_border.dart';
+
 class MainPageBody extends StatefulWidget {
-  final String balance; 
+  final String balance;
 
   const MainPageBody(this.balance, {super.key});
 
@@ -11,20 +14,20 @@ class MainPageBody extends StatefulWidget {
 }
 
 class _MainPageBodyState extends State<MainPageBody> {
-  final Color textcolor = const Color.fromARGB(158, 0, 0, 0);
   bool ishidden = true;
-  late Future <List<dynamic>> text;
-@override
+  late Future text;
+  @override
   void initState() {
-   
     super.initState();
-    text = HttpRequests().getCatinfo();
+    text = HttpRequests().getCatsinfo();
   }
-  
-
 
   @override
   Widget build(context) {
+    String balanceMain = widget.balance.split('.')[0];
+    String balanceLeftover = widget.balance.substring(balanceMain.length);
+    String message = 'Get 3% deposit rate with free Visa card';
+    TextStyle basicStyele = TextStyle(color: AppColors.appLightBlack);
     double width = MediaQuery.of(context).size.width;
     Icon showBalanceIcon = ishidden
         ? const Icon(Icons.remove_red_eye)
@@ -42,9 +45,10 @@ class _MainPageBodyState extends State<MainPageBody> {
                     color: Color.fromARGB(232, 235, 234, 232),
                     borderRadius: BorderRadius.all(Radius.circular(10))),
                 width: width * 0.55,
-                height: 160,
+                height: 170,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 5),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
@@ -60,27 +64,37 @@ class _MainPageBodyState extends State<MainPageBody> {
                                   icon: showBalanceIcon)
                             ]),
                         const Text(
-                          'Balance', style: TextStyle(color: Color.fromARGB(78, 0, 0, 0),fontSize: 15 ),
+                          'Balance',
+                          style: TextStyle(
+                              color: Color.fromARGB(78, 0, 0, 0), fontSize: 15),
                         ),
-                      const  SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         Visibility(
                           visible: ishidden ? true : false,
-                          replacement: const Text('*****',style:TextStyle(color: Color.fromARGB(78, 0, 0, 0),fontSize: 20 ),),
-                          child: Text(widget.balance,style:const TextStyle(fontSize: 20),),
+                          replacement: const Text(
+                            '*****',
+                            style: TextStyle(
+                                color: Color.fromARGB(78, 0, 0, 0),
+                                fontSize: 20),
+                          ),
+                          child: RichText(
+                            text: TextSpan(children: [
+                              TextSpan(text: balanceMain,style: TextStyle(color: AppColors.appBlack,fontSize: 20)),
+                              TextSpan(text: balanceLeftover,style: TextStyle(color: AppColors.appLightBlack,fontSize: 20))
+                            ]),
+                          ),
                         ),
                         Row(
                           children: [
-                           
                             Expanded(
                               child: ElevatedButton(
                                 onPressed: () {
-                                
                                   super.setState(() {
-                                    text = HttpRequests().getCatinfo();
-                                  } );
+                                    text = HttpRequests().getCatsinfo();
+                                  });
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.orange,
+                                  backgroundColor: AppColors.appOrange,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(50),
                                   ),
@@ -95,37 +109,50 @@ class _MainPageBodyState extends State<MainPageBody> {
                             ),
                           ],
                         ),
+                        const SizedBox(height: 8)
                       ]),
                 ),
               ),
-              Container(
-                height: 160,
-                width: width * 0.35,
-                decoration: const BoxDecoration(
-                    color: Color.fromARGB(232, 98, 201, 201),
-                    borderRadius: BorderRadius.all(Radius.circular(10))),
-                child:  Column(
-                  children: [  FutureBuilder(
-                    future:text,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Align(heightFactor: 4 ,  child:  CircularProgressIndicator() );}
-                      else {
-                        return Text(snapshot.data! [0]['name'] ,style:const TextStyle(color: Colors.black),);
-                      }
-                      
-                    },
-                  )]
+              DottedBorder(
+                borderType: BorderType.RRect,
+                color: AppColors.appOrange,
+                dashPattern: [8],
+                radius: Radius.circular(12),
+                child: Container(
+                  height: 160,
+                  width: width * 0.35,
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.all(Radius.circular(12)),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Image(
+                                image: const AssetImage(
+                                  'lib/assets/Visa_Logo.png',
+                                ),
+                                width: width * 0.3),
+                            RichText(
+                                text: TextSpan(children: const [
+                                  TextSpan(text: 'Get', style: TextStyle()),
+                                  TextSpan(
+                                      text: ' 3%',
+                                      style: TextStyle(color: Colors.green)),
+                                  TextSpan(
+                                      text: ' deposit rate with free Visa card')
+                                ], style: basicStyele),
+                                textAlign: TextAlign.center,
+                                maxLines: 3)
+                          ]),
+                    ),
+                  ),
                 ),
-            
               ),
             ],
           ),
-         const MainPageSlider()
-         
-
+          const MainPageSlider()
         ],
-     
       ),
     );
   }

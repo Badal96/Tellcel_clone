@@ -25,12 +25,7 @@ class MainPageSlider extends StatelessWidget {
            makeScrolItems('car','lib/assets/bmwimage.jpg' ,AppColors.appOrange),
            makeScrolItems('car','lib/assets/bmwimage.jpg' ,AppColors.appOrange),
            makeScrolItems('car','lib/assets/bmwimage.jpg' ,AppColors.appOrange),
-           makeScrolItems('car','lib/assets/bmwimage.jpg' ,AppColors.appOrange),
-           
-
-         
-         
-
+           makeScrolItems('car','lib/assets/bmwimage.jpg' ,AppColors.appOrange),    
           ],
         ),
         );
@@ -44,10 +39,10 @@ Widget makeScrolItems (String text,  imgasset ,Color color) {
     child: Container(
                     
                   decoration:BoxDecoration(image: DecorationImage( image: AssetImage(imgasset) ,fit:BoxFit.contain ),borderRadius: BorderRadius.circular(10),color: color ),
-                  height: 120,
+                  height: 100,
                   width: 80,
                   child: Column(
-                  children: [Text(text) ] ,
+                  children: [Text(text)] ,
                 )
               ),
   );
