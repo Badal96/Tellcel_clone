@@ -5,10 +5,9 @@ import 'package:http/http.dart' as http;
 
 class HttpRequests {
   
-  final String _url  = 'https://api.thecatapi.com/v1/images/search';
+  final String _url  = 'https://ap.thecatapi.com/v1/images/search';
   final String limit = '12';
   var client = http.Client();
-String checklength (String text) => text.length>200? text.substring(0,197)+'...':text;
  
   Future  getCatsinfo () async { 
 
