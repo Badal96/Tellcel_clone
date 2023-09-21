@@ -5,13 +5,12 @@ import 'package:http/http.dart' as http;
 
 class HttpRequests {
   
-  final String _url  = 'https://ap.thecatapi.com/v1/images/search';
-  final String limit = '12';
+  final String _url  = 'https://fakestoreapi.com/products';
   var client = http.Client();
  
-  Future  getCatsinfo () async { 
+  Future  getAllProducts () async { 
 
-  var url = Uri.parse(_url );
+  var url = Uri.parse(_url);
 
 try {
   var response = await client.get(url);
@@ -23,7 +22,26 @@ try {
    print (jsonDecode(response.body));
    }
 } catch (e) {
-   print('error$e');
+   print('error $e');
+  
+}
+  
+  }
+  Future  getSingleProducts (id) async { 
+
+  var url = Uri.parse('$_url/$id');
+
+try {
+  var response = await client.get(url);
+   if (response.statusCode == 200) {
+  
+   return   jsonDecode(response.body); 
+  }
+  else { 
+   print (jsonDecode(response.body));
+   }
+} catch (e) {
+   print('error $e');
   
 }
   

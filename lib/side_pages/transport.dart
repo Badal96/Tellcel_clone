@@ -3,10 +3,10 @@ import 'package:telcell_wallet/helpers/colors.dart';
 
 class TransportPage extends StatefulWidget {
 
-  final String balance;
+  
 
-  const TransportPage ({super.key,
-  required this.balance});
+  const TransportPage ({super.key});
+  
 
   @override
   State<TransportPage> createState() => _TransportPageState();
@@ -19,7 +19,7 @@ class _TransportPageState extends State<TransportPage> {
   return  Scaffold(
     appBar: AppBar(
       elevation: 0,
-      title: Text(widget.balance, style: TextStyle(fontSize: 20,color: AppColors.appBlack),) ,
+      title: Text('transport', style: TextStyle(fontSize: 20,color: AppColors.appBlack),) ,
     ),
     body:const Placeholder(),
 
