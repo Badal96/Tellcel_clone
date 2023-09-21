@@ -35,7 +35,7 @@ final GoRouter router = GoRouter(
                     SingleProductPage(id: state.pathParameters['id'] ?? ''),
               ),
               GoRoute(
-                path: 'myproducts',
+                path: 'myproducts:favorites',
                 name: 'myproducts',
                 builder: (context, state) {
                   return  MyProducts();
