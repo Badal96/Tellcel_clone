@@ -8,7 +8,7 @@ class HttpRequests {
   final String _url  = 'https://fakestoreapi.com/products';
   var client = http.Client();
  
-  Future  getAllProducts () async { 
+  Future <List?> getAllProducts () async { 
 
   var url = Uri.parse(_url);
 
@@ -25,6 +25,7 @@ try {
    print('error $e');
   
 }
+return null;
   
   }
   Future  getSingleProducts (id) async { 

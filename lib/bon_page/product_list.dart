@@ -1,34 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:telcell_wallet/helpers/colors.dart';
-import 'package:telcell_wallet/http_requests/httprequest.dart';
 import 'package:telcell_wallet/side_pages/error_message.dart';
-import 'package:go_router/go_router.dart';
 import 'package:telcell_wallet/side_pages/single_product.dart';
 
-class ProductList extends StatefulWidget {
- final Function addtomyproduts;
-  const ProductList({required this.addtomyproduts ,super.key});
-
-  @override
-  State<ProductList> createState() => _ProductListState();
-}
-
-class _ProductListState extends State<ProductList> {
-  HttpRequests requests = HttpRequests();
-  Future? productList;
-  @override
-  void initState() {
-    super.initState();
-    productList = requests.getAllProducts();
-  }
+class ProductList extends StatelessWidget {
+  final void Function(int item) addorremoveproduct;
+  final Future<List?> productlist;
+  final List<int> favlist;
+  final bool filtered;
+  const ProductList(
+      {required this.addorremoveproduct,
+      required this.productlist,
+      super.key,
+      required this.favlist,
+      this.filtered = false});
 
   @override
   Widget build(context) {
-    double width = MediaQuery.of(context).size.width;
-
     return FutureBuilder(
-        future: productList,
+        future: productlist,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Padding(
@@ -46,10 +37,10 @@ class _ProductListState extends State<ProductList> {
           return Column(
             children: [
               ...snapshot.data!.map((e) => singleItem(
-                  ontap: widget.addtomyproduts,
+                  favlist: favlist,
+                  ontap: addorremoveproduct,
                   context: context,
                   imagurl: e['image'],
-                  width: width,
                   title: e['title'],
                   description: e['description'],
                   price: e['price'].toString(),
@@ -61,9 +52,9 @@ class _ProductListState extends State<ProductList> {
 }
 
 Widget singleItem(
-    {required BuildContext context,
+    {required List<int> favlist,
+    required BuildContext context,
     required String imagurl,
-    required double width,
     required String title,
     required String description,
     required String price,
@@ -76,8 +67,14 @@ Widget singleItem(
 
   return GestureDetector(
     onTap: () {
-      context.go(context.namedLocation('singleproduct',
-          pathParameters: {'id': id.toString()}));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => SingleProductPage(
+                    id: id,
+                    ontap: ontap,
+                    favlist: favlist,
+                  )));
     },
     child: Container(
       height: 130,
@@ -115,7 +112,7 @@ Widget singleItem(
                   ),
                   Text(
                     description,
-                    style:const TextStyle(fontSize: 11),
+                    style: const TextStyle(fontSize: 11),
                   ),
                 ],
               ),
@@ -126,11 +123,12 @@ Widget singleItem(
             child: IconButton(
               icon: Icon(
                 Icons.heart_broken,
-                color: AppColors.appLightBlack,
+                color: favlist.contains(id)
+                    ? AppColors.appOrange
+                    : AppColors.appLightBlack,
               ),
               onPressed: () {
                 ontap(id);
-                
               },
             ),
           )

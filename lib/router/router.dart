@@ -5,7 +5,7 @@ import 'package:telcell_wallet/main_page/main_body.dart';
 import 'package:telcell_wallet/qr_code_page/qr_code_page.dart';
 import 'package:telcell_wallet/side_pages/Transport.dart';
 import 'package:telcell_wallet/side_pages/my_products.dart';
-import 'package:telcell_wallet/side_pages/single_product.dart';
+
 import '../side_pages/scaffold_navbar.dart';
 
 final GoRouter router = GoRouter(
@@ -29,16 +29,15 @@ final GoRouter router = GoRouter(
             builder: (context, state) => const BonPage(),
             routes: [
               GoRoute(
-                path: 'singleproduct:id',
-                name: 'singleproduct',
-                builder: (context, state) =>
-                    SingleProductPage(id: state.pathParameters['id'] ?? ''),
-              ),
-              GoRoute(
-                path: 'myproducts:favorites',
+                path: 'myproducts',
                 name: 'myproducts',
                 builder: (context, state) {
-                  return  MyProducts();
+                  Map params = state.extra as Map;
+                  return MyProducts(
+                    favlist: params['favorites'],
+                    productlist: params['productlist'],
+                    ontap: params['ontap'],
+                  );
                 },
               )
             ]),

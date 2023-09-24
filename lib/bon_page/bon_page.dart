@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:telcell_wallet/bon_page/product_list.dart';
 import 'package:telcell_wallet/helpers/colors.dart';
 import 'package:go_router/go_router.dart';
-
+import 'package:telcell_wallet/http_requests/httprequest.dart';
 class BonPage extends StatefulWidget {
   const BonPage({super.key});
 
@@ -12,13 +12,26 @@ class BonPage extends StatefulWidget {
 }
 
 class _BonPageState extends State<BonPage> {
-  List myproducts = [];
+      List<int> myproducts = [];
+      HttpRequests requests = HttpRequests();
+     late Future <List?> productList;
 
-  void  addmyproducts (itemid) {
-   setState(() {
-     myproducts.add(itemid);
-   });
+@override
+  void initState() {
+   
+    super.initState();
+    productList  = requests.getAllProducts();
   }
+
+  void addmyproducts(int itemid) {
+    setState(() {
+      myproducts.contains(itemid)
+          ? myproducts.remove(itemid)
+          : myproducts.add(itemid);
+    });
+  }
+
+
   @override
   Widget build(context) {
     double width = MediaQuery.of(context).size.width;
@@ -82,9 +95,12 @@ class _BonPageState extends State<BonPage> {
                     children: [
                       iconbuiler(Icons.shopping_bag, 'Market', () {}),
                       iconbuiler(Icons.shopping_bag, 'My products', () {
-                        context.go(
-                          context.namedLocation('myproducts', pathParameters: {'favorites': myproducts.toString()} )
-                        );
+                        context.goNamed('myproducts', extra: {
+                          'favorites': myproducts,
+                          'ontap': addmyproducts,
+                          'productlist':productList
+                         
+                        });
                       }),
                       iconbuiler(Icons.shopping_bag, 'Invite friends', () {}),
                       iconbuiler(Icons.shopping_bag, 'Bon partners', () {}),
@@ -110,7 +126,11 @@ class _BonPageState extends State<BonPage> {
                 ],
               ),
             ),
-             ProductList(addtomyproduts: addmyproducts)
+            ProductList(
+              addorremoveproduct: addmyproducts,
+               productlist:productList,
+               favlist:myproducts
+            )
           ]),
         ),
       ),

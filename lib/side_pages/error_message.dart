@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:telcell_wallet/helpers/colors.dart';
 import 'package:go_router/go_router.dart';
 
 class ErrorMessage extends StatelessWidget {

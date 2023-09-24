@@ -2,29 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:telcell_wallet/helpers/colors.dart';
 import 'package:telcell_wallet/side_pages/error_message.dart';
-
 import '../http_requests/httprequest.dart';
 
 class SingleProductPage extends StatefulWidget {
-  final String id;
-  const SingleProductPage({required this.id, super.key});
+  final int id;
+  final Function ontap;
+  final List<int> favlist;
+  const SingleProductPage({ required this.id, super.key, required this.ontap, required this.favlist});
 
   @override
   State<SingleProductPage> createState() => _SingleProductPageState();
 }
 
 class _SingleProductPageState extends State<SingleProductPage> {
+  late Color initial;
   Future? productinfo;
   HttpRequests request = HttpRequests();
   @override
   void initState() {
-    super.initState();
-
-    productinfo = request.getSingleProducts(widget.id);
+    super.initState();  
+    initial =  widget.favlist.contains(widget.id)?AppColors.appOrange:AppColors.appLightBlack;
+    productinfo = request.getSingleProducts(widget.id.toString());
   }
+
+
 
   @override
   Widget build(context) {
+    
+   
     return Scaffold(
       appBar: AppBar(
         foregroundColor: AppColors.appOrange,
@@ -97,12 +103,20 @@ class _SingleProductPageState extends State<SingleProductPage> {
                         ),
                       ),
                     ),
-                    Container(
-                        padding: const EdgeInsets.only(right: 10),
-                        child: Icon(
-                          Icons.heart_broken,
-                          color: AppColors.appLightBlack,
-                        ))
+                    GestureDetector(
+                      onTap: (){
+                         setState(() {
+                           initial = widget.favlist.contains(widget.id)?AppColors.appOrange:AppColors.appLightBlack;
+                         });
+                         widget.ontap(widget.id);},
+
+                      child: Container(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Icon(
+                            Icons.heart_broken,
+                            color:widget.favlist.contains(widget.id)?AppColors.appOrange:AppColors.appLightBlack,
+                          )),
+                    )
                   ],
                 ),
                 Container(
@@ -119,7 +133,9 @@ class _SingleProductPageState extends State<SingleProductPage> {
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+       
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.appOrange,
                   ),
